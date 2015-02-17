@@ -1,0 +1,303 @@
+seit rechnung 6.7.06
+----------------------------------------------------------------
+-import 			6h
+-telefon 			1h
+-adressen			1h
+-excel				2h
+-telefon&email		1h
+-mf fix				1h
+-telefon			1h
+-gespräch ändern    3h
+-support			1h
+-support			1h
+-telefon			0.5h
+-import				2h
+-kalender			1h
+-dateidatum fix     1h
+-scannen            6h
+-erfolgrechnung I.+gesamtstatistik-datumsfeld    8h
+-erfolgrechnung II. 5h
+
+seit rechnung 1.9.06
+----------------------------------------------------------------
+-linux                    1h
+-support                  1h
+-kalender                 4h
+-support                  3h
+-kalender&import          4h
+-import                   3h
+-probleme&telefon       2.5h
+-doppelte                 2h
+-solar, doppelte         10h
+-calendar, fehler, mails  3h
+-minor                    1h
+-server                   2h
+-büro bernd               4h
+-bernd zuhause            1h
+-statistik solar          2h
+
+seit rechnung 13.11.06
+----------------------------------------------------------------
+-import wetzel            2h
+-zählfehler, calendar     3h
+-calendar, import, fon    5h
+-calendar, import, admin  3h
+-calendar, telefon        2h
+-calendar                 3h
+-telefonsupport           3h
+-serverinstall            2h
+-server mail              2h  30
+-backup einrichten        1h
+-db, mail, ets einrichten 4h
+-import                   2h
+-import, support, fixings 4h
+-kalender, server         2h
+-datetool fix             2h 45
+
+seit rechnung 16.12.06
+----------------------------------------------------------------
+-kalender füllen         2h
+-support                 1h
+-weilburg                3h
+-import, support...      6h
+-calendar&homepage       1h
+-mafo-aktionslogging     2h
+-diverses                3h
+-mf-erfolg & mde search  3h
+-bug search not found    1h
+-support-bernd           1h
+-laptop                  2h
+-calendar                2h
+-bug fixing/phoning      1h
+-support                 1h
+-typo3-support/update    2h  
+-mail-suppport, 2007 xls change  1h
+-mafo erfolgsrechnung    2h
+-datensuche              2h
+-mf-erfolgsrechnung      3h 
+-support & calender      1h 40
+-import (overwrite)      2h
+-mf-erfolg               2h
+-mf-erfolgsplit          2h
+-doubletten import       2h
+-calender                2h 50
+-support                 1h
+-fix database&admin bugs 2h
+
+seit rechnung 16.02.07
+----------------------------------------------------------------
+-rechner weilburg        8h
+-statistik               3h
+-import fixing           3h
+-telefon support         2h
+-import fehlersuche      1h
+-new admin/mf            2h
+-import                  2h
+-import                  2h
+-gehring probleme, log/del enhanced 4h
+-support                 2h
+-kalender                1h  30
+-fehler fixing, kalender 3h
+-abrechnuhgswochen, emails, import, support 3h
+-db collection fixed     2h  
+-minor                   2h  40
+
+
+seit rechnung 31.03.07
+----------------------------------------------------------------
+-telefon                 2h
+-abrechnungswochen       1h
+-import                  2h
+-mail, import test       1h
+-db/statistik/new aktion fix  2h
+-weilburg support        2h 10h
+-sql check               2h
+-kalender                1h
+-kalender                1h
+-kalendertool            2h
+-kalendertool            3h
+-homepage                4h
+-kalendertool            2h 25h
+-homepage                4h
+-homepage                9h 36h
+-clean db, bearbstate, fix del&setfree 4h
+
+
+seit rechnung 02.05.07
+----------------------------------------------------------------
+-homepage                1h
+-homepage                2h
+-admin                   3h
+-caladmin&termine        4h 11h
+-caladmin&termine        5h
+-calendar                3h
+-server-support          1h
+-caladmin                2h
+-freistellen             4h 
+-caladmin                4h 30h
+
+seit rechnung 14.06.07
+----------------------------------------------------------------
+-telefon support                  2h
+-daten zusammenstellung           1h
+-neu daten machen                 1h
+-caladmin, admin, hilfe, sync    11h  
+-mf/admin fix and improve         6h  
+-excelfix try                     2h
+-support                          1h
+-mysql/excel fix                  3h  
+-more fixings                     4h  = 32h
+
+seit rechnung 02.08.07
+----------------------------------------------------------------
+-statistik fix                    2h
+-divers                           5h
+-statistik                        1h
+-calendar no back                 1h
+-fon/email support                1h
+-calendar backview                4h
+-persist aktionen                 4h
+-lock contacts                    3h
+-statistik                        4h
+-aktion cache fix                 3h
+-mailsupport                      2h 30h
+
+
+seit rechnung 01.10.07
+----------------------------------------------------------------
+-terminstatistik                  3h
+-terminfehler                     2h
+-solarstuff                       3h
+-körner bug, solar stuff          3h
+-formulare                        2h
+-formulare                        2h 15h
+-megaexcelexport                  4h
+-statistik                        3h
+-megaexcelexport                  3h 25h
+-megaexcelexport                  4h
+-telefonat                        1h
+-db fehler (name&straße)          1h
+-mailinmaker                      4h 35h
+-adressfix&email                  2h
+-kalender und mafo hilfe          1h
+
+
+seit rechnung 20.11.07
+----------------------------------------------------------------
+-web                              2h
+-web                              2h
+-fon                              1h
+-sql fix                          1h
+-web/fon                          1h
+-web/bugs/fon                     2h
+-statistik/bug search             2h
+-bug search                       1h
+-web                              1h
+-bug fix, pw                      1h 14h
+-bufixing, new funcs (lm)         8h
+-add action in admin              5h 
+-some improvement in admin        5h 32h
+-web, tl install                  4h
+-adress check for mailing         1h
+-admin can search mailingenabled  1h
+-web, some config and first content  3h
+-web, content                     3h
+-fix in contact handling (glasb.) 1h 45h
+-web, content                     3h
+-statistic fix, angelegt diff fix 2h 50h
+-web, content                     3h
+-streetfix                        4h 57h
+-pixfix (lizenz)                  1h
+
+seit rechnung 14.01.08
+----------------------------------------------------------------
+-webalizer                        1h
+-pixfix                           1h
+-impfix, gespräch fix             2h
+-mafofix                          1h 5h
+-tel                              1h
+-fixes (count, red bar, )         3h
+-fixes shfflag                    1h 10h
+-web (türen, bilder raus)         4h
+-bereitstellungsfix               2h
+-fix, fon, pass                   2h
+-website fixings                  3h 21h
+-mail fixing                      2h
+-foning, sipping                  3h
+-website                          2h
+-fix priordate                    2h 30h
+-asterisk info                    1h
+-buch (50€)                       4h 35h
+
+
+seit rechnung 12.03.08
+----------------------------------------------------------------
+-mf fix                           2h
+-mf enhance: ergebnis order       2h
+-sip                              2h
+-wl statistic                     3h
+-fixings                          1h
+-mf erfolg                        10h
+-mf-open url on vista improvement 2h
+-amdin excel honorar              2h
+-fix admin                        1h
+-admin mf-erfolg                  1h
+-bug fixes from mail              4h
+-server update, typolight id      2h
+-googleapps                       1h
+-sip integration mfassi           7h 40h
+
+
+
+seit rechnung 25.5.08
+----------------------------------------------------------------
+-telefonat                        1h
+-bug fixing                       1h
+-mailzeuch                        1h
+-mailzeuch                        2h
+-mailzeuch bugfinding             2h
+-homepage                         3h
+-java                             2h
+-domain                           2h
+-mf rechner install               3h  17h
+-mf-assi always relogin           2h
+-mf-admin new formulare           4h
+-bernd homepage fon               1h
+-mffix                            2h
+-gallerie fix                     1h
+-mf install                       1h
+-abrechnungswochen fix            3h  
+-homepage intro                   1h
+-siptest                          2h  34h
+-sip install mf clients           2h
+-mf support, mf db fix            2h
+-bereitstellungsbug               2h
+-domain rmkmafo                   1h
+-homepage                         2h
+-fon/mail and fixing              2h
+-homepage                         8h 
+-homepage                         7h 60h
+
+
+seit rechnung 
+----------------------------------------------------------------
+-homepage fonat                   5h
+-wesnemma                         1h
+-homepage                         6h
+-wesnima                          1h
+-mail 3punkt                      3h
+-homepage                         5h
+-zählfehler                       2h
+-zählfehler                       2h
+-fehlersuche/homepage             3h
+-sync fix                         1h
+-homepage: new online             8h 40h
+-bei bernd                        2h
+-meta                             2h
+
+seit rechnung 16.11.08
+----------------------------------------------------------------
+-analytics                        1h
+-sip                              1h
+-qumicall                         1h
+

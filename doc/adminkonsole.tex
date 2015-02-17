@@ -1,0 +1,55 @@
+% adminkonsole
+
+\section{Die Adminkonsole}
+\subsection{Begiffe}
+Zuert sollen einige Begriffe erläutert werden. Den Teil eines Computerprogramms den der Benutzer auf dem Bildschirm sieht wird Benutzeroberfläche oder kurz Oberfläche genannt. Auf dieser Oberfläche gibt es verschiedene Elemente. Die bekanntesten sind sicher die Fenster, von denen Windows seinen Namen hat. Die Fenster beherbergen üblicherweise die Oberflächen der Programme. Auch die Adminkonsole hat ein eigenes Fenster. Wird die Adminkonsole gestartet, so sieht das erscheinende Fenster aus wie in Abbildung \ref{adminconsole_start}. Die Oberfläche besteht nun aus weiteren Elementen, den Widgets. Widgets sind Bereiche der Oberfläche, die auf Benutzereingaben reagieren. Folgende Widgets werden benutzt:
+\begin{description}
+	\item[Button] Klickt man auf einen Button werden Aktionen ausgeführt. Er hat eine Beschriftung und zwei Zustände. Er kann normal und eingedrückt sein. Solange die durch das Anklicken des Buttons gestarteten Aktionen ausgeführt werden bleibt er eingedrückt und kann dann keine weiteren Klicks empfangen. Auch alle anderen Elemente sind in dieser Zeit inaktiv.
+	\item[Eingabefeld] Diese Elemente sind zu Texteingabe gedacht. Hier kann Text eingegeben und dargestellt werden. Eingabefelder reagieren meistens nicht auf das, was eingegeben wurde. Drückt man in manchen Eingabefeldern die Eingabetaste, so wird eine Aktion gestartet. Darauf wird dann hingewiesen.
+	\item[Checkbox] Eine Checkbox ist ein kleiner Kasten. Klickt man ihn an, so bekommt er einen Haken. Klickt man nochmal darauf geht der Haken wieder weg. So kann man zwischen diesen beiden Zuständen umschalten. Die Checkbox ist aktiviert, sobald sie einen Haken darstellt.
+	\item[Listen] Eine Liste kann aufgeklappt werden und stellt dann eine Auswahl an Werten zu Verfügung, die man mit der Maus anklicken und somit auswählen kann. Der aktuelle Wert der Liste wird immer dargestellt.
+	\item[Tabelle] Eine Tabelle besteht aus Zeilen und Spalten und kann Werte darstellen und manchmal Eingaben empfangen, so ähnlich wie die Eingabefelder. Eine Tabelle kann auch eine Selektion haben. Also eine aktivierte Zeile. Diese wird blau dargetellt. Auf diese selektierte Zeile können Aktionen ausgeführt werden.
+\end{description}
+
+\subsection{Aufgabe}
+Die Aufgabe der Adminkonsole besteht darin Kontakte zur Bearbeitung durch die Marktforscher zusammenzustellen. Und nach erfolgter Bearbeitung Honorarabrechnungen für die Marktforscher zu erzeugen. Sie wird in der Zentrale in Weilburg benutzt.
+
+Es können immer bis zu 30 Kontakte zu einer Kontaktgruppe zusammegesucht werden. Die Sucheinstellungen für diese Gruppen können auf der Oberfläche eingestellt werden. Dies wird im nächsten Absatz beschrieben.
+
+\subsection{Startoberfläche}
+\mypicture{adminconsole_start}{Adminkonsole - Startzustand}{0.6}
+In Abbildung \ref{adminconsole_start} ist der Zustand der Oberfläche direkt nach dem Start der Adminkonsole dargestellt. Eine Reihe von Elementen ist zu sehen (Die Numerirung der Aufzählung paßt zu denen in der Abbildung). Ihre Funktion soll nun beschrieben werden.
+\begin{description}
+	\item[1:] Fenstertitel mit Programmname und Version. Bei der Fehlersuche kann es nützlich sein, diese Versionsnummer zu beachten.
+	\item[2:] Eingabefeld für die Postleitzahlensuchmaske. Hier kann eine Postleitzahl eingegeben werden, um das Ergebnis der Suche auf diese einzuschränken. Statt einer ganzen Postleitzahl kann auch ein Muster angegeben werden. Ein Muster besteht aus Zeichen die im Ergebnis vorkommen sollen und Platzhaltern, für die beliebige Zeichen im Ergebnis stehen können. Zum Beispiel: Wird in das Eingabefeld "`65*"' eingegeben, so werden alle Kontakte mit Postleitzahlen gefunden, die mit 65 anfangen. Oder man macht die Eingabe "`*65"', dann werden alle Kontakte gefunden bei denen die Postleitzahl mit 65 endet. \textit{Wird die Eingabe des Suchmusters mit der Eingabetaste der Tastatur beendet, so wird der Suchvorgang direkt gestartet.}
+	\item[3:] Eingabefeld für die Städtesuchmaske. Sie funktioniert genauso wie die Postleitzahlensuchmaske, nur auf das Feld Stadt angewendet.
+	\item[4:] Auswahlliste für die Kontaktart. Hier kann gewählt werden, ob nur Kontakte gesucht werden, die noch nie angerufen wurden oder auch welche die schon kontaktiert wurden.
+	\item[5:] Checkbox für Terminbeschränkung. Ist diese Checkbox aktiviert, so werden dem Ergebnis nur Kontakte zugefügt, die schon einmal einen Termin hatten.
+	\item[6:] Checkbox für Auftragsbeschränkung. Ist diese Checkbox aktiviert, so werden dem Ergebnis nur Kontakte zugefügt, die schon einmal einen Auftrag hatten.
+	\item[7:] Suchbutton. Er startet die Suche nach Kontakten, die auf das eingegebene Suchmuster passen. Es werden immer nur maximal 30 Kontakte zu einer Kontaktgruppe zusammengefasst.
+	\item[8:] Kontaktgruppentabelle. Hier werden die Ergebnisse der Kontaktgruppensuche dargestellt (mehr siehe Abschnitt \ref{adminkoconsoleguifilled}). Diese Tabelle ist beim Start der Adminkonsole immer leer.
+	\item[9:] Aktionsbuttons der Kontaktgruppentabelle. Werden in \ref{adminkoconsoleguifilled} näher beschrieben.
+\end{description}
+
+\subsection{Oberfläche mit Kontakten}
+\label{adminkoconsoleguifilled}
+\mypicture{adminconsole_filled}{Adminkonsole - Mit Kontakten}{0.6}
+In der Abbildung \ref{adminconsole_filled} wird die Oberfläche dargestellt, nachdem zwei Kontaktgruppen erstellt wurden.
+
+\begin{description}
+	\item[1:] Beispiel für eine Suchmaske in der Kontakte bei denen die Postleitzahl mit 65 beginnt gesucht werden. Das "`*"' im Stadteingabafeld bedeuet, dass alle Städte gefunden werden, dass also keine Einschränkung vorgenommen wird.
+	\item[2:] Die Kontaktgruppentabelle. Hier werden die gefundenen Gruppen dargestellt, sowie das Suchmuster, mit dem sie gefunden wurden. Es kann sein, dass zu einer Gruppe nicht 30 Kontakte gefunden wurden, deshalb wird die Anzahl der gefundenen Kontakte pro Gruppe in der letzten Spalte dargestellt. Es gibt in der Tabelle immer eine selektierte Zeile (Gruppe). Manche Aktionen, wie löschen und anzeigen beziehen sich auf die selektierte Zeile (Gruppe).
+	\item[3:] Button \texttt{Kontaktgruppe anzeigen}. Eine Liste der ausgewählten Kontakte wird angezeigt. Sie kann mit "`Ok"' wieder geschlossen werden.
+	\item[4:] Button \texttt{Kontaktgruppe entfernen}. Die selektierte Kontaktgruppe wird aus dem Ergebnis entfernt.
+	\item[5:] Button \texttt{Kontaktgruppen für Mafo Ablegen}. Wird dieser Button betätigt, so wird eine Liste angezeigt mit Marktforschern. Hier soll der Marktforscher ausgewählt werden, für den die Kontakte bestimmt sind. Dies wird dann in der Datenank gespeichert und der Marktforscher kann diese Kontakte zur Bearbeitung abrufen (siehe auch Abschnitt \ref{verfahren}).
+\end{description}
+
+\subsection{Verfahren}
+\label{verfahren}
+Hier soll kurz dargestellt werden, was im Hintergrund bei der Kontaktgruppenzusammenstellung passiert. 
+
+Zuerst soll das Feld \textsl{bearbeitungsstatus} in der \texttt{kunden}-Tabelle erläutert werden (siehe Abschnitt \ref{datenbank}). In diesem Feld wird gespeichert, ob ein Kontakt gerade frei ist, temporär gesperrt, für einen Marktforscher reserviert, bei einem Marktforscher in Bearbeitung oder der Marktforscher die Bearbeitung des Kontakts beendet hat und der Kontakt nun abgerechnet werden kann. Dieses Feld hat große Bedeutung für den ganzen Ablauf der Programme Adminkonsole und Mafo-Client.
+
+Die Adminkonsole arbeitet direkt auf der Datenbank. Wird ein Suchmuster eingegeben und der "`30 Kontakte hinzufügen"'-Button gedrückt, so werden in der Datenbank Kontakte gesucht und eine neue Zeile in die Tabelle hinzugefügt. Die gefundenen Kontakte werden als temporär gesperrt vermerkt, damit sie nicht nochmal gefunden werden. Hat man die Zusammenstellung beendet und den Button "`Kontaktgruppen in der Datenbank für MaFo markieren"' gedrückt, so werden nach Auswahl des Marktforschers das Feld \textsl{bearbeitungstatus} auf "`zum Marktforscher"' und das Feld \textsl{marktforscher} auf den ausgewählten Marktforscher gesetzt und dies bei allen ausgewählten Kontakten. So kann der Mafo-Client alle Kontakte suchen, die den \textsl{bearbeitungstatus} auf "`zum Marktforscher"' eingestellt haben und einen bestimmten Marktforscher. Diese sind dann zur Bearbeitung vorgesehen.
+
+Beim Starten und Beenden der Adminkonsole werden alle temporären \textsl{bearbeitungsstatus}-Felder auf frei gesetzt!! Es ist aufgrund dieser Verfahrensart nicht möglich gleichzeitig mit zwei Adminkonsolen zu arbeiten.

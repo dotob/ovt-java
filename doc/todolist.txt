@@ -1,0 +1,57 @@
+TODO:
+===================================================
+
+WEB:
+- !! gmail setup...
+- gallerie checken
+- inhalte migrieren (energie gewinnen)
+- design anpassen
+
+ADMIN: 
+- mf-erfolg, termingruppen
+- fehlerkorrektur bei großen statistiken (mf-motivation, mf-erfolgsrechnung, wl-erfolgsrechnung)
+- namen fehler in der db checken
+- mferfolg: honorar in excel rechnen nicht in java
+- bei gesprächsbericht eingabe fehlende eingaben abfangen
+
+
+MFASSI:
+
+
+VOIP:
+- preise voip
+- wer wie was
+
+
+
+
+
+DONE:
+===================================================
+//- !! anschluss vom sipfon an assi
+//- !! installieren?
+//- fehlern aus mails nachgehen
+//- unbedingt bereitstellungszahlen korrigieren
+//- wl-termine analog zu region-termine
+//- headset
+//- alte aktionen bei mfassi ausblenden
+//- notiz leeren
+//- 10.000er export in excel mit actionsfilter (...), und keine verkaufkontakten, letztes ergebnis mit ausgeben
+//- passwort für 1000er und 10000er export machen
+//- mailing anlegen button machen, name angeben, aktion erweitern
+//- nach adresse bearbeiten und speichern ist id leer...dooooof
+//- im admin aktion anlegen einbauen
+//- when admin creates action do not set contact to finished but to free
+//- plz filter bei statistik mf-ergebnisse, mf-termine
+//- bei gesprächseingabe auf vorhandenes telefonat prüfen 
+//- shfflag im admin änderbar machen
+//- reload data from db after changes from admin
+//- bearbeitungsstatus nicht änderbar machen im admin
+//- bei mailing: wenn report, dann vorletztes ergebnis, bzw. ergebnis das nicht mailing ist
+//- strassen fehler erforschen
+//- strassen fehler, bei fehlenden exceldateien nachziehen
+//- hoco premium die 1 in den zweiten rahmen
+//- hoco sachen einarbeiten, siehe mail
+//- logo
+//- typolight weiter einrichten
+//- lizenzbilder raus machen

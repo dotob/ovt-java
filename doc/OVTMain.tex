@@ -1,0 +1,93 @@
+\documentclass[12pt,ngerman]{scrartcl}
+
+%---- Eingabezeichensatz -----------------------------------------------------
+\usepackage[latin1]{inputenc}   % Eingabe deutscher Umlaute
+                                % Unix/Linux: latin1
+                                % Windows: cp1250
+
+%---- Sonstiges --------------------------------------------------------------
+\usepackage{graphicx} % Vorbereitung der Graphiken
+\usepackage{varioref}
+\usepackage{makeidx}
+\usepackage{scrpage2}
+\usepackage{newclude}
+\usepackage{multirow}
+\usepackage{ngerman}
+\usepackage{listings}
+\usepackage{trfsigns}         % for laplace and fourier signs... 
+\usepackage{natbib}           % use me for author year style for [] use [square] as option
+%\usepackage[numbers,square]{natbib}  % use me for numberstyle citation
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={title},
+  pdfauthor={dotob - Sebastian Krämer},
+  pdfsubject={OVT Software Dokumentation},
+  colorlinks=true, 
+  linkcolor=blue
+}
+\areaset[1.5cm]%               % Zusaetzlicher Rand fuer die Bindung
+        {16cm}{22cm}         % Textbreite und Hoehe
+
+%---- einige Seiteneinstellungen ---------------------------------------------
+\setlength{\parindent}{0em}
+\setlength{\itemindent}{0em}
+%\setlength{\oddsidemargin}{0cm}
+%\setlength{\evensidemargin}{-0.7cm}
+\addtolength{\parskip}{0.4em}
+\pagestyle{scrheadings}
+\setheadsepline{.4pt}
+\setfootsepline{.4pt}
+
+%---- Sonstiges --------------------------------------------------------------
+\makeindex
+\newcommand{\bb}[1]{{\bf #1}}
+
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=4, breaklines=true, basicstyle=\scriptsize, aboveskip=\bigskipamount,
+        numbersep=5pt, frame=single, captionpos=b, commentstyle=\color{blue}, showspaces=false}
+
+%---- Bilder --------------------------------------------------------------
+\newcommand{\pictpath}{pix}
+\newcommand{\mypicture}[3]{{
+   \begin{figure}[htb]
+   \hspace*{\fill}
+   \includegraphics[scale=#3]{\pictpath/#1}
+   \hspace{\fill}
+   \caption{\label{#1} #2}
+   \end{figure}}}
+
+\vrefwarning
+
+\begin{document}
+
+%---- Titelseite ------------------------------------------------------------
+%\titlehead{
+%	\begin{longtable}[t]{lr}
+%		\multirow{3}{6cm}{\includegraphics[scale=0.5]{pix/fh_logo.jpg}}& \sffamily Abteilung Jülich\\
+%		                                                          & \sffamily Labor für Medizinische Informatik \\
+%		                                                          & \sffamily Prof. Dr. rer. nat W. Hillen\\[1em] 
+%	\end{longtable}
+%	\hrule
+%}
+\title{OVT Over'tür\\ Software Dokumentation komplett\\Datenbank \& Adminkonsole \& Mafo-Client}
+\author{ 
+	dotob gbr\\
+	\textbf{Sebastian Krämer}\\
+}
+\date{Aachen/Weilburg, \today\\[4em]}
+\maketitle
+
+\tableofcontents
+
+%===========================================================================
+\section{Einleitung}
+In dieser Dokumentation sollen die Grundzüge der verwendeten Datenbank beschrieben werden. Ebenso beschrieben werden die beiden Java-Applikationen Adminkonsole und Mafo-Client. Die Adminkonsole ist das Werkzeug für die Zentrale in Weilburg. Mit ihr werden Datensätze für die Marktforscher zusammengestellt und Honorarabrechnungen für die Marktforscher erzeugt. Die Marktforscher haben ihr eigenes Werkzeug, den Mafo-Client. Mit ihm können sie die vorbereiteten Datensätze bearbeiten, also Kontakte aus der Datenbank laden, abtelefonieren und die Ergebnisse wieder in die Datenbank zurückspeichern.
+
+
+\include{datenbank}
+
+\include{adminkonsole}
+
+\include{mafoclient}
+
+\end{document}

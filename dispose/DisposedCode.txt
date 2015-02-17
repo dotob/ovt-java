@@ -1,0 +1,434 @@
+
+
+########### COOL SQL ##################
+
+# tabelle samt inhalt kopieren
+CREATE TABLE cat_inactiv SELECT * FROM cat
+
+# diverses
+update kunden set nachname=REPLACE(nachname, ',', ''), vorname=REPLACE(vorname, ',', '')
+update kunden set swap=nachname, nachname=vorname, vorname=swap where sourcefile like '%EK%'
+select nachname, vorname, stadt, count(*) from kunden group by nachname, vorname, stadt having count(*)>1
+delete from aktionen using kunden k, aktionen a where k.id=a.kunde AND k.stadt like '%Alt%heim%';
+SELECT count(*), m.nachname, m.vorname FROM kunden k, marktdatenermittler m WHERE m.id=k.bearbeiter GROUP BY bearbeiter;
+INSERT INTO idtemp SELECT kunden.id, kunden.id FROM kundenNEW RIGHT OUTER JOIN kunden USING (id) WHERE kundenNEW.id IS NULL
+INSERT INTO kundenNEW SELECT * FROM kunden GROUP BY telprivat HAVING count(*)<=1
+UPDATE abrechnungswochen SET zahltag=ADDDATE(bis, INTERVAL 6 DAY) WHERE zahltag IS NULL;
+
+# how many adresses from which kind
+SELECT s.text, s.id ,count(*) FROM kunden k , shfflag s WHERE k.shfflag=s.id GROUP BY shfflag;
+
+# update hasaktion
+update kunden set hasaktion=0;
+update kunden join aktionen on kunden.id=aktionen.kunde set hasaktion=1;
+update kunden join aktionen on kunden.id=aktionen.kunde set hasaktion=2 where aktionen.ergebnis IN (SELECT id FROM ergebnisse WHERE nomoney=0);
+
+# update hasgespraech
+update kunden set hasgespraech=0;
+update kunden set hasauftrag=0;
+update kunden join gespraeche on kunden.id=gespraeche.kunde set hasgespraech=1;
+update kunden join gespraeche on kunden.id=gespraeche.kunde set hasauftrag=1 where gespraeche.ergebnis IN (SELECT id FROM terminergebnisse WHERE erfolg=2);
+
+# find kunden without real aktions
+SELECT a.id, k.id FROM aktionen a RIGHT OUTER JOIN kunden k ON a.kunde=k.id WHERE a.id IS NULL
+
+# remove aktions without kunde
+TRUNCATE idtemp;
+INSERT INTO idtemp (SELECT a.id, a.id FROM kunden k RIGHT OUTER JOIN aktionen a ON a.kunde=k.id WHERE k.id IS NULL)
+DELETE FROM aktionen WHERE id IN (SELECT id FROM idtemp);
+
+# set adresses with wrong result dirty
+update kunden join aktionen on kunden.id=aktionen.kunde set bearbeitungsstatus=99 where aktionen.ergebnis IN (SELECT id FROM ergebnisse WHERE setadressdirty=1);
+update kunden join aktionen on kunden.id=aktionen.kunde set bearbeitungsstatus=99 where kunden.marktforscher=0 OR aktionen.ergebnis IN (SELECT id FROM ergebnisse WHERE setadressdirty=1);
+update kunden join gespraeche on kunden.id=gespraeche.kunde set bearbeitungsstatus=99 where gespraeche.ergebnis IN (SELECT id FROM terminergebnisse WHERE erfolg=2);
+
+# remove gespraeche without kunde
+TRUNCATE idtemp;
+INSERT INTO idtemp (SELECT a.id, a.id FROM kunden k RIGHT OUTER JOIN gespraeche a ON a.kunde=k.id WHERE k.id IS NULL)
+DELETE FROM gespraeche WHERE id IN (SELECT id FROM idtemp);
+
+# not working view 
+CREATE VIEW alles AS SELECT * FROM kunden k, aktionen a, ergebnisse e, shfflag s, marktforscher m WHERE k.id=a.kunde AND a.ergebnis=e.id AND k.shfflag=s.id AND a.marktforscher=m.id;
+
+# fix zur�ckgezogene
+update kunden join aktionen on kunden.id=aktionen.kunde set bearbeitungsstatus=1, bereitgestellt=NOW(), kunden.marktforscher=aktionen.marktforscher where aktionen.angelegt>='2008-12-08' AND aktionen.angelegt<='2008-12-13'
+AND aktionen.ergebnis=14 AND aktionen.abgerechnet=0;
+
+########### COMPLETE CANCEL OF MAFOS DATA ##################
+DELETE FROM aktionen WHERE marktforscher=10;
+DELETE FROM gespraeche WHERE marktforscher=10;
+DELETE FROM bereitgestellt WHERE marktforscher=10;
+UPDATE kunden SET bearbeitungsstatus=0, notiz='', marktforscher=0 WHERE marktforscher=10;
+
+SELECT count(*) FROM aktionen a RIGHT OUTER JOIN kunden k ON a.kunde=k.id WHERE a.id IS NULL
+
+
+########### packages ##################
+
+Benutzte Pakete:
+Apache Jakarta Commons, log4j, POI (Apache License)
+XNap Commons (LGPL)
+JCalendar (LGPL)
+JGoodies Looks (Prop)
+MySQL Connector/J (GPL)
+
+########### idea for completions ##################
+
+    private void loadNewCompletions() {
+        String inh = this.inputID.getText();
+        if (inh.length()>0){
+            Vector<String> foundIDs = new Vector<String>();
+            int maxComp = 50;
+            String plzPart  = Character.isDigit(inh.charAt(0)) ? "plz LIKE '"+inh+"%'" : "";
+            String namePart = !Character.isDigit(inh.charAt(0)) ? "nachname LIKE '"+inh+"%'" : "";
+            int plusPos     = inh.indexOf("+"); 
+            if (plusPos>=0 && plusPos<inh.length()-1){
+                namePart = "nachname LIKE '"+inh.substring(0, plusPos)+"%'";
+                plzPart  = " AND plz LIKE '"+inh.substring(plusPos+1, inh.length()-1)+"%'";
+            }
+            try {
+                ResultSet rs = Database.selectDebug("id, nachname, vorname", "kunden", "WHERE "+namePart+plzPart+" ORDER BY nachname LIMIT "+maxComp);
+                while (rs.next()){
+                    String add = rs.getString("nachname")+", "+rs.getString("vorname")+" ["+rs.getString("id")+"]";
+                    System.out.println(add);
+                    foundIDs.add(add);
+                }
+                Database.close(rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                MyLog.exceptionError(e);
+            }
+            this.idCompletionModel.clear();
+            this.idCompletionModel.insert(foundIDs.toArray());
+        }
+    }
+
+
+########### UNCOOL JAVA ##################
+	public static void setAktionAndGespraech(){
+		try {
+			ResultSet rs = Database.select("id", "kunden");
+			while (rs.next()){
+				String id = rs.getString("id");
+				Contact c = new Contact(rs, false);
+				// set aktionen
+				int a =c.getAktionen().size(); 
+				if (a>0){
+					Database.update("kunden", "hasaktion=1","WHERE id="+id);
+				}
+				// set gespräch
+//				boolean g = c.hasTermin(); 
+//				if (g){
+//					Database.update("kunden", "hasgespraech=1","WHERE id="+id);
+//				}
+//				System.out.println(id+" has "+a+" aktions and gespraeche is:"+g);
+				System.out.println(id+" has "+a+" aktions");
+			}
+			Database.close(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+########### EXCEL STUFF #####################
+	public void makeExcelSheet(){
+		// make excel report			
+		HSSFWorkbook wb = new HSSFWorkbook();
+
+		// first overview page
+		this.makeFirstPage(wb);
+		
+		// show all contacts..
+		this.makeContactOverview(wb);
+		
+		// save and show file
+		try {
+			// write excel file
+			String dirToSaveTo = SettingsReader.getProp("OVTAdmin.HonorarOutputVerzeichnis");
+			String fname = dirToSaveTo+this.year+"_"+this.week+"_"+this.mafo.rawName()+".xls";
+			FileOutputStream fileOut = new FileOutputStream(fname);
+			wb.write(fileOut);
+			fileOut.close();
+			
+			// open excel
+			File toOpen = new File(fname);
+			Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL " + toOpen.getAbsolutePath());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+		private void makeFillWhite(HSSFWorkbook wb, HSSFSheet firstPage){
+		// fill 100x100cell area white
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setFillForegroundColor(HSSFColor.WHITE.index);
+		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		for (int i = 0; i<100; i++){
+			HSSFRow row = firstPage.createRow(i);
+			for (int j = 0; j<100; j++){
+				HSSFCell cell = row.createCell((short) j);
+				cell.setCellStyle(style);
+			}
+		}
+	}
+	
+	private void makeStaticHeader(HSSFWorkbook wb, HSSFSheet firstPage){
+		// make ovt header
+		firstPage.addMergedRegion(new Region(1,(short)1,1,(short)6));
+		firstPage.addMergedRegion(new Region(2,(short)1,2,(short)6));
+		firstPage.addMergedRegion(new Region(3,(short)1,3,(short)6));
+		firstPage.addMergedRegion(new Region(4,(short)1,4,(short)6));
+		firstPage.addMergedRegion(new Region(5,(short)1,5,(short)6));
+		
+	    HSSFFont font10red = wb.createFont();
+	    font10red.setFontHeightInPoints((short)10);
+	    font10red.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	    font10red.setFontName("Arial");
+	    font10red.setColor(HSSFColor.RED.index);
+	    
+	    HSSFFont font10black = wb.createFont();
+	    font10black.setFontHeightInPoints((short)10);
+	    font10black.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	    font10black.setFontName("Arial");
+	    font10black.setColor(HSSFColor.BLACK.index);
+	    
+	    HSSFFont font18blue = wb.createFont();
+	    font18blue.setFontHeightInPoints((short)18);
+	    font18blue.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	    font18blue.setFontName("Arial");
+	    font18blue.setColor(HSSFColor.BLUE.index);
+	    
+		HSSFCellStyle headerStyle1 = wb.createCellStyle();
+		headerStyle1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		headerStyle1.setFont(font18blue);
+		headerStyle1.setFillForegroundColor(HSSFColor.WHITE.index);
+		headerStyle1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+		HSSFCellStyle headerStyle2 = wb.createCellStyle();
+		headerStyle2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		headerStyle2.setFont(font10red);
+		headerStyle2.setFillForegroundColor(HSSFColor.WHITE.index);
+		headerStyle2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+		HSSFCellStyle headerStyle3 = wb.createCellStyle();
+		headerStyle3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		headerStyle3.setFont(font10black);
+		headerStyle3.setFillForegroundColor(HSSFColor.WHITE.index);
+		headerStyle3.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+		firstPage.getRow(1).getCell((short)1).setCellValue("OVT Over'tür");
+		firstPage.getRow(1).getCell((short)1).setCellStyle(headerStyle1);
+		firstPage.getRow(2).getCell((short)1).setCellValue("macht Ihr Haus");
+		firstPage.getRow(2).getCell((short)1).setCellStyle(headerStyle2);
+		firstPage.getRow(3).getCell((short)1).setCellValue("schöner - sicherer - wertvoller");
+		firstPage.getRow(3).getCell((short)1).setCellStyle(headerStyle2);
+		firstPage.getRow(5).getCell((short)1).setCellValue(this.mafo.toString());
+		firstPage.getRow(5).getCell((short)1).setCellStyle(headerStyle3);
+	}
+	
+	private void makeInfoFrame(HSSFWorkbook wb, HSSFSheet firstPage, int startRow, short startCol){
+		int width  = 5;
+		int height = 14;
+		
+		// make the frame
+		
+	    HSSFFont font10BlackBold = wb.createFont();
+	    font10BlackBold.setFontHeightInPoints((short)10);
+	    font10BlackBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	    font10BlackBold.setFontName("Arial");
+	    font10BlackBold.setColor(HSSFColor.BLACK.index);
+	    HSSFFont font10BlackNormal = wb.createFont();
+	    font10BlackNormal.setFontHeightInPoints((short)10);
+	    font10BlackNormal.setFontName("Arial");
+	    font10BlackNormal.setColor(HSSFColor.BLACK.index);
+	    
+	    
+		HSSFCellStyle styleOL = wb.createCellStyle();
+	    styleOL.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	    styleOL.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		HSSFCellStyle styleOR = wb.createCellStyle();
+	    styleOR.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	    styleOR.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		HSSFCellStyle styleUL = wb.createCellStyle();
+	    styleUL.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	    styleUL.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		HSSFCellStyle styleUR = wb.createCellStyle();
+	    styleUR.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	    styleUR.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	    
+	    HSSFCellStyle styleO = wb.createCellStyle();
+	    styleO.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		styleO.setFillForegroundColor(HSSFColor.WHITE.index);
+		styleO.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		HSSFCellStyle styleR = wb.createCellStyle();
+	    styleR.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		styleR.setFillForegroundColor(HSSFColor.WHITE.index);
+		styleR.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		HSSFCellStyle styleU = wb.createCellStyle();
+	    styleU.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		styleU.setFillForegroundColor(HSSFColor.WHITE.index);
+		styleU.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		HSSFCellStyle styleL = wb.createCellStyle();
+	    styleL.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		styleL.setFillForegroundColor(HSSFColor.WHITE.index);
+		styleL.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+	    firstPage.getRow(startRow).getCell((short)startCol).setCellStyle(styleOL);
+	    firstPage.getRow(startRow).getCell((short)(startCol+width)).setCellStyle(styleOR);
+	    firstPage.getRow(startRow+height).getCell((short)startCol).setCellStyle(styleUL);
+	    firstPage.getRow(startRow+height).getCell((short)(startCol+width)).setCellStyle(styleUR);
+	    
+	    // horizontal
+	    for (int i=startCol+1; i<startCol+width; i++){
+	    	firstPage.getRow(startRow).getCell((short)i).setCellStyle(styleO);
+	    	firstPage.getRow(startRow+height).getCell((short)i).setCellStyle(styleU);
+	    }
+
+	    // vertical
+	    for (int i=startRow+1; i<startRow+height; i++){
+	    	firstPage.getRow(i).getCell((short)(startCol)).setCellStyle(styleL);
+	    	firstPage.getRow(i).getCell((short)(startCol+width)).setCellStyle(styleR);
+	    }
+	    
+	    // static text
+		HSSFCellStyle style0 = wb.createCellStyle();
+		style0.setFillForegroundColor(HSSFColor.WHITE.index);
+		style0.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	    style0.setFont(font10BlackBold);
+
+	    HSSFCellStyle styleN = wb.createCellStyle();
+	    styleN.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		styleN.setFillForegroundColor(HSSFColor.WHITE.index);
+		styleN.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	    styleN.setFont(font10BlackNormal);
+
+	    styleU.setFont(font10BlackBold);
+	    
+	    firstPage.getRow(startRow+1).getCell((short)(startCol+1)).setCellValue("Abrechnungswoche");
+	    firstPage.getRow(startRow+1).getCell((short)(startCol+1)).setCellStyle(style0);
+	    
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+1)).setCellValue("Datum von");
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+1)).setCellStyle(style0);
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+3)).setCellValue("bis");
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+3)).setCellStyle(style0);
+	    
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+1)).setCellValue("Adressen");
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+2)).setCellValue("Anzahl");
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+3)).setCellValue("Einzelpreis");
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+4)).setCellValue("Summe");
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+1)).setCellStyle(styleU);
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+2)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+3)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+4).getCell((short)(startCol+4)).setCellStyle(styleN);
+	    
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+1)).setCellValue("Termin");
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+2)).setCellValue("Anzahl");
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+4)).setCellValue("Summe");
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+1)).setCellStyle(styleU);
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+2)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+3)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+7).getCell((short)(startCol+4)).setCellStyle(styleN);
+	    
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+1)).setCellValue("Auftrag");
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+2)).setCellValue("Anzahl");
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+4)).setCellValue("Summe");
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+1)).setCellStyle(styleU);
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+2)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+3)).setCellStyle(styleN);
+	    firstPage.getRow(startRow+10).getCell((short)(startCol+4)).setCellStyle(styleN);
+	    
+	    
+	    // dates
+	    firstPage.getRow(startRow+1).getCell((short)(startCol+2)).setCellValue(this.week);
+//	    java.util.Date aVon = new java.util.Date(this.von.getTime());
+//	    java.util.Date aBis = new java.util.Date(this.bis.getTime());
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+2)).setCellValue(this.von.toString());
+	    firstPage.getRow(startRow+2).getCell((short)(startCol+4)).setCellValue(this.bis.toString());
+	    
+	    // adressen
+	    int count = this.aktionenToBill.size();
+	    double completeAktionsPrize = this.aktionsPrize+this.telefonPrize;
+	    firstPage.getRow(startRow+5).getCell((short)(startCol+2)).setCellValue(count);
+	    firstPage.getRow(startRow+5).getCell((short)(startCol+3)).setCellValue(completeAktionsPrize);
+	    firstPage.getRow(startRow+5).getCell((short)(startCol+4)).setCellValue(count*completeAktionsPrize);
+	    
+	    // termine
+	    count = this.termineToBill.size();
+	    firstPage.getRow(startRow+8).getCell((short)(startCol+2)).setCellValue(count);
+	    firstPage.getRow(startRow+8).getCell((short)(startCol+4)).setCellValue(count*this.terminPrize);
+	    
+	    // auftraege
+	    count = this.auftraegeToBill.size();
+	    // collect auftragssummen
+	    int auftragSum = 0;
+	    for (Iterator iter = this.auftraegeToBill.iterator(); iter.hasNext();) {
+	    	Gespraech a = (Gespraech) iter.next();
+			if (a.getVertragsBruttoSumme()>0){
+				auftragSum += a.getVertragsBruttoSumme();
+			}
+		}
+	    firstPage.getRow(startRow+11).getCell((short)(startCol+2)).setCellValue(count);
+	    firstPage.getRow(startRow+11).getCell((short)(startCol+4)).setCellValue(auftragSum*this.autragsPercentage);
+	    
+	    // show price information
+	    HSSFFont font8BlackNormal = wb.createFont();
+	    font8BlackNormal.setFontHeightInPoints((short)8);
+	    font8BlackNormal.setFontName("Arial");
+	    font8BlackNormal.setColor(HSSFColor.BLACK.index);
+	    
+	    HSSFCellStyle styleSmall = wb.createCellStyle();
+	    styleSmall.setFillForegroundColor(HSSFColor.WHITE.index);
+	    styleSmall.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	    styleSmall.setFont(font8BlackNormal);
+	    
+	    firstPage.getRow(startRow+24).getCell((short)(startCol+2)).setCellValue("Grundhonorar/Adresse");
+	    firstPage.getRow(startRow+24).getCell((short)(startCol+2)).setCellStyle(styleSmall);
+	    firstPage.getRow(startRow+24).getCell((short)(startCol+3)).setCellValue(this.aktionsPrize);
+	    firstPage.getRow(startRow+24).getCell((short)(startCol+3)).setCellStyle(styleSmall);
+
+	    firstPage.getRow(startRow+25).getCell((short)(startCol+2)).setCellValue("Kostenpauschale/Adresse");
+	    firstPage.getRow(startRow+25).getCell((short)(startCol+2)).setCellStyle(styleSmall);
+	    firstPage.getRow(startRow+25).getCell((short)(startCol+3)).setCellValue(this.telefonPrize);
+	    firstPage.getRow(startRow+25).getCell((short)(startCol+3)).setCellStyle(styleSmall);
+	    
+	    firstPage.getRow(startRow+26).getCell((short)(startCol+2)).setCellValue("Pauschale/Termin");
+	    firstPage.getRow(startRow+26).getCell((short)(startCol+2)).setCellStyle(styleSmall);
+	    firstPage.getRow(startRow+26).getCell((short)(startCol+3)).setCellValue(this.terminPrize);
+	    firstPage.getRow(startRow+26).getCell((short)(startCol+3)).setCellStyle(styleSmall);
+
+	    firstPage.getRow(startRow+28).getCell((short)(startCol+2)).setCellValue("Alle Honorarangaben in Euro");
+	    firstPage.getRow(startRow+28).getCell((short)(startCol+2)).setCellStyle(styleSmall);
+	}
+	
+	private void makeFirstPage(HSSFWorkbook wb){
+		HSSFSheet firstPage = wb.createSheet("Übersicht");
+
+		short col = 1;
+		firstPage.setColumnWidth(col++, (short)3000);
+		firstPage.setColumnWidth(col++, (short)5000);
+		firstPage.setColumnWidth(col++, (short)5000);
+		firstPage.setColumnWidth(col++, (short)4000);
+		firstPage.setColumnWidth(col++, (short)4000);
+		firstPage.setColumnWidth(col++, (short)3000);
+
+		this.makeFillWhite(wb, firstPage);
+		this.makeStaticHeader(wb, firstPage);
+		
+		int startRow   = 7;
+		short startCol = 1;
+		this.makeInfoFrame(wb, firstPage, startRow, startCol);
+	}
+	
+	private void makeContactOverview(HSSFWorkbook wb) {
+		HSSFSheet adressPage = wb.createSheet("Adressen");
+		CBReport.makeHeader(wb, adressPage, this.mafo);
+		ContactBundle adresses = new ContactBundle();
+		for (Iterator iter = this.aktionenToBill.iterator(); iter.hasNext();) {
+			Aktion a  = (Aktion) iter.next();
+			Contact c = new Contact(a.getContact());
+			adresses.addContact(c);
+		}
+		CBReport.makeContactLines(adressPage, adresses);
+	}

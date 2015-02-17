@@ -1,0 +1,19 @@
+% datenbank
+
+\section{Die Datenbank - Aufbau und Konzept}
+\label{datenbank}
+Die Daten der Over'tür werden in einer relationalen Datenbank abgelegt. Momentan wird dafür der MySQL-Server benutzt. Eine Datenbank besteht aus Tabellen (im folgenden werden Tabellennamen so dargestellt: \texttt{tabellenname}). Eine Tabelle hat Zeilen und Spalten. Die Zeilen heißen Datensätze und die Spalten heißen Felder (im folgenden werden Feldnamen so dargestellt: \textsl{feldname}). Das heißt die Hierarchie sieht so aus: Datenbank $\Rightarrow$ Tabelle $\Rightarrow$ Datensatz $\Rightarrow$ Feld.
+
+\mypicture{db-schema}{OVT - Datenbank Schema}{0.4}
+
+Das Schema der Datenbank in der die Over'tür Kundendaten abgelegt werden sollen ist in Abbildung \ref{db-schema} gezeigt. Es gibt 14 Tabellen. Die Haupttabelle heißt \texttt{kunden} und beherbergt die Daten über die Kunden, wie zum Beispiel Adressdaten und Daten zu den Häusern, die von den Martdatenermittlern notiert wurden. 
+
+Bestimmte Felder der Datenbank werden durch weitere Tabellen definiert. So ist zum Beispiel die Farbe der Haustür nicht im Klartext in der Datenbank abgelegt, sondern als Code, der über die Tabelle \texttt{farbe} aufgelöst wird. In der \texttt{kunden}-Tabelle steht dann beispielsweise eine \textit{1} im Feld \textsl{haustuerfarbe} und in der Tabelle \texttt{farben} wird diese \textit{1} dann zu \textit{schwarz} umgesetzt. Ebenso wird mit den Feldern \textsl{fassadenart} und \textsl{bearbeitungsstatus} verfahren. 
+
+In jeder Tabelle gibt es ein Feld \textsl{id}. Dieses Feld reicht aus, um den Datensatz eindeutig in der Tabelle zu finden. Alle anderen Felder der Tabelle können das nicht leisten. So kann zum Beispiel der Städtename Aachen in mehreren Datensätzen auftauchen. Die \textsl{id} \textit{1} aber nur in einem. Felder wie \textsl{id} werden Schlüssel genannt. 
+
+Jedem Kundendatensatz können nun weitere Datensätze aus anderen Tabellen zugeordnet werden. So können jedem Kunden Aktionen zugeordnet werden. Das heißt es gibt in der Tabelle \texttt{aktionen} keinen, einen oder mehrere Datensätze, die einem Kunden zugeordnet sind. 
+
+Mit der \texttt{aktionen}-Tabelle verhält es sich genauso wie mit der Tabelle \texttt{kunden}. Auch hier werden wieder Felder mit anderen Tabellen aufgelöst. Wichtig zu nennen sind hier die Felder \textsl{ergebnis} und \textsl{marktforscher}. Eine Aktion ist also nicht nur einem Kunden zugeordnet, sondern auch einem Marktforscher. 
+
+

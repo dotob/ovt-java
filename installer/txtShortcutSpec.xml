@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<shortcuts>
+  <skipIfNotSupported />
+  <programGroup defaultName="OVT Mafo-Assistent" location="applications"/>
+  <shortcut
+     name="OVT Mafo-Assistent"
+     programGroup="yes"
+     desktop="yes"
+     applications="yes"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\OVTMafo.jar"
+     commandLine=""
+     description="OVT Marktforscher-Assistent"
+     iconFile="$INSTALL_PATH\resources\ovt-mafo.ico"
+     iconIndex="0"
+     initialState="normal">
+   </shortcut>
+</shortcuts>
